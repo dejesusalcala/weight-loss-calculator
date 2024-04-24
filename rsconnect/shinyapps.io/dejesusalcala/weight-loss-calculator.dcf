@@ -5,9 +5,9 @@ account: dejesusalcala
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 11794992
-bundleId: 8509535
+bundleId: 8534676
 url: https://dejesusalcala.shinyapps.io/weight-loss-calculator/
 version: 1
 asMultiple: FALSE
 asStatic: FALSE
-ignoredFiles: LICENSE|main.html|main.qmd|README.md|main_files
+ignoredFiles: LICENSE|main.html|main.qmd|README.md

@@ -34,7 +34,7 @@ ComputeBMR = function(weight = 150, height = 65, age = 32, gender = "male") {
 ```
 
 ```{r}
-my_bmr = ComputeBMR(weight = 141, height = 65, age = 32, gender = "male")
+my_bmr = ComputeBMR(weight = 200, height = 65, age = 32, gender = "male")
 my_bmr
 ```
 
