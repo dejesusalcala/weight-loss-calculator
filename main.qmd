@@ -5,18 +5,20 @@ format: html
 
 # Introduction
 
-In this project we be creating a calorie calculator to aid us in achieving our weight loss/gain goals
+In this project we will be creating a calorie calculator to aid us in achieving our weight loss/gain goals
 
 # Basal Metabolic Rate
 
 Mifflin-St Jeor Equation:
+
 For men:
 BMR = 10W + 6.25H - 5A + 5
+
 For women:
 BMR = 10W + 6.25H - 5A - 161
 
 ```{r}
-ComputeBMR = function(weight = 150, height = 65, age = 32, gender = "male") {
+ComputeBMR = function(weight = 140, height = 65, age = 30, gender = "male") {
   
   # Convert from imperial to metric
   
@@ -34,16 +36,65 @@ ComputeBMR = function(weight = 150, height = 65, age = 32, gender = "male") {
 ```
 
 ```{r}
-my_bmr = ComputeBMR(weight = 200, height = 65, age = 32, gender = "male")
+sedentary = .20
+light_exercise = .375
+moderate_exercise = .5
+heavy_exercise = .7
+athlete = .9
+```
+
+
+```{r}
+my_bmr = ComputeBMR(weight = 136, height = 65, age = 32, gender = "male")
+
+my_activity_level = moderate_exercise
 my_bmr
 ```
 
 ```{r}
-my_bmr + my_bmr*.9
+cat("sedentary:", my_bmr + my_bmr*.2,"\n")
+cat("light exercise:", my_bmr + my_bmr*.375,"\n")
+cat("moderate exercise:", my_bmr + my_bmr*.5,"\n")
+cat("heavy exercise:", my_bmr + my_bmr*.7,"\n")
+cat("athlete:", my_bmr + my_bmr*.9)
 ```
 
 
 ```{r}
-140*0.45359237
+my_bmr + my_bmr*my_activity_level
 ```
+
+```{r}
+my_weight = 200
+current_bf_percentage = .30
+goal_bf_percentage = .11
+lean_mass = my_weight - my_weight*current_bf_percentage
+```
+
+
+
+```{r}
+bodyweight_goal = (lean_mass/(1 - goal_bf_percentage))
+bodyweight_goal
+```
+
+```{r}
+my_weight - bodyweight_goal
+```
+
+```{r}
+weeks_to_reach_goal = (my_weight - bodyweight_goal)/(.75)
+weeks_to_reach_goal
+```
+
+```{r}
+choices = list("4 feet" = 4,
+               "5 feet" = 5,
+               "6 feet" = 6)
+```
+
+```{r}
+as.numeric(choices["4 feet"][1])
+```
+
 
