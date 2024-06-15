@@ -80,19 +80,19 @@ ui <- fluidPage(
           ),
           column(width = 3,
                  sliderInput(inputId = "SelectBF",
-                      "Estimated bodyfat %",
+                      "Current Estimated bodyfat %:",
                       min = 8,
                       max = 50,
                       step = .5,
                       value = 30),
                  sliderInput(inputId = "SelectBFGoal",
-                      "Bodyfat % Goal",
+                      "Bodyfat % Goal:",
                       min = 8,
                       max = 50,
                       step = .5,
                       value = 20),
                  sliderInput(inputId = "SelectWeightLossRate",
-                      "Amount of Weight Loss per week",
+                      "Amount of Weight Loss per week (lbs/week):",
                       min = .25,
                       max = 1.5,
                       step = .25,
@@ -118,20 +118,22 @@ ui <- fluidPage(
     
     hr(),
     
-    h4("Maintenance Calories"),
+    h4("Maintenance Calories:"),
     
     textOutput(outputId = "maintenanceCalories"),
     
-    h4("Calories to Conusume for Weight Loss"),
+    h4("Calories to Conusume for Weight Loss:"),
     
     textOutput(outputId = "targetCalories"),
     
-    h4("Bodyweight Goal"),
+    h4("Bodyweight Goal:"),
     
     textOutput(outputId = "bodyweightGoal"),
     
-    h4("Time to reach goal"),
-
+    h4("Weeks to reach goal:"),
+    
+    textOutput(outputId = "timeToReachGoal"),
+    
     h3("Graphs"),
     
     plotOutput(outputId = "distPlot"),
@@ -152,9 +154,19 @@ server <- function(input, output) {
                              age = as.numeric(input$SelectAge),
                              gender = input$SelectGender)})
   
-  #bmr = bmr()
   
   maintenance_calories = reactive({bmr() + bmr()*activity()})
+  
+  weight_loss_rate = reactive({input$SelectWeightLossRate})
+  
+  my_weight = reactive({input$SelectWeight})
+  bf_percentage = reactive({input$SelectBF})
+  bf_percentage_goal = reactive({input$SelectBFGoal})
+  
+  lean_mass = reactive({my_weight() - my_weight()*(bf_percentage()/100)})
+  
+  bodyweight_goal = reactive({(lean_mass()/(1 - (bf_percentage_goal()/100)))})
+  
 
     output$distPlot <- renderPlot({
         # generate bins based on input$bins from ui.R
@@ -196,8 +208,7 @@ server <- function(input, output) {
     
     output$targetCalories = renderText({
       
-      weight_loss_rate = reactive({input$SelectWeightLossRate})
-      
+
       target_calories = maintenance_calories() - 500*weight_loss_rate()
       
       round(target_calories)
@@ -205,17 +216,18 @@ server <- function(input, output) {
     
     output$bodyweightGoal = renderText({
       
-      my_weight = reactive({input$SelectWeight})
-      bf_percentage = reactive({input$SelectBF})
-      bf_percentage_goal = reactive({input$SelectBFGoal})
       
-      lean_mass = my_weight() - my_weight()*(bf_percentage()/100)
       
-      bodyweight_goal = (lean_mass/(1 - (bf_percentage_goal()/100)))
-      
-      round(bodyweight_goal,1)
+      round(bodyweight_goal(),1)
     })
     
+    output$timeToReachGoal = renderText({
+      
+      weeks_to_reach_goal = (my_weight() - bodyweight_goal())/(weight_loss_rate())
+      
+      round(weeks_to_reach_goal,1)
+      
+    })
 }
 
 # Run the application 

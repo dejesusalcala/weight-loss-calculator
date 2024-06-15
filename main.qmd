@@ -65,8 +65,8 @@ my_bmr + my_bmr*my_activity_level
 ```
 
 ```{r}
-my_weight = 200
-current_bf_percentage = .30
+my_weight = 138.4
+current_bf_percentage = .16
 goal_bf_percentage = .11
 lean_mass = my_weight - my_weight*current_bf_percentage
 ```
@@ -88,13 +88,12 @@ weeks_to_reach_goal
 ```
 
 ```{r}
-choices = list("4 feet" = 4,
-               "5 feet" = 5,
-               "6 feet" = 6)
+todays_date = as.Date("2024-6-4")
+todays_date
 ```
 
 ```{r}
-as.numeric(choices["4 feet"][1])
+todays_date + weeks_to_reach_goal*7
 ```
 
 
