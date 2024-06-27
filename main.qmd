@@ -65,8 +65,8 @@ my_bmr + my_bmr*my_activity_level
 ```
 
 ```{r}
-my_weight = 138.4
-current_bf_percentage = .16
+my_weight = 135
+current_bf_percentage = .15
 goal_bf_percentage = .11
 lean_mass = my_weight - my_weight*current_bf_percentage
 ```
@@ -88,7 +88,7 @@ weeks_to_reach_goal
 ```
 
 ```{r}
-todays_date = as.Date("2024-6-4")
+todays_date = as.Date("2024-6-27")
 todays_date
 ```
 

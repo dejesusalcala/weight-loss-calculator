@@ -106,7 +106,11 @@ ui <- fluidPage(
                                      "Moderate exercise" = .5,
                                      "Heavy exercise" = .7,
                                      "Athlete" = .9),
-                      selected = .375)
+                      selected = .375),
+                 dateInput(inputId = "StartingDate",
+                           label = "Start Date",
+                           value = "2024-01-01"),
+                 
           ),
           
         ),
@@ -128,6 +132,10 @@ ui <- fluidPage(
     h4("Weeks to reach goal:"),
     
     textOutput(outputId = "timeToReachGoal"),
+    
+    h4("Date to reach goal:"),
+    
+    verbatimTextOutput(outputId = "dateToReachGoal"),
     
     h3("Data Table"),
     
@@ -189,6 +197,38 @@ server <- function(input, output) {
       weeks_to_reach_goal = (my_weight() - bodyweight_goal())/(weight_loss_rate())
       
       round(weeks_to_reach_goal,1)
+      
+    })
+    
+    output$dateToReachGoal = renderPrint({
+      
+      starting_date = reactive({input$StartingDate})
+      
+      ###
+      
+      #my_weight = 135
+      #current_bf_percentage = .15
+      #goal_bf_percentage = .11
+      #lean_mass = my_weight - my_weight*current_bf_percentage
+
+      #bodyweight_goal = (lean_mass/(1 - goal_bf_percentage))
+      #bodyweight_goal
+      
+      
+      #my_weight - bodyweight_goal
+      
+      weeks_to_reach_goal = (my_weight() - bodyweight_goal())/(weight_loss_rate())
+
+
+      #todays_date = as.Date("2024-6-27")
+      #todays_date
+      
+      goal_date = starting_date() + weeks_to_reach_goal*7
+      ###
+      
+      goal_date
+      
+      
       
     })
 }
