@@ -96,4 +96,44 @@ todays_date
 todays_date + weeks_to_reach_goal*7
 ```
 
+# Data Table
+
+```{r}
+number_of_weeks = ceiling(weeks_to_reach_goal)
+```
+
+```{r}
+todays_date + number_of_weeks*7
+```
+
+```{r}
+todays_date
+```
+
+```{r}
+DATE = seq(todays_date, todays_date + number_of_weeks*7, by = "week")
+DATE
+
+```
+
+```{r}
+length_of_df = length(DATE)
+```
+
+```{r}
+my_weight
+```
+
+```{r}
+seq(135, 130,by= -.75)
+```
+
+```{r}
+WEIGHT = seq(my_weight,bodyweight_goal -.75,by = -.75)
+WEIGHT
+```
+
+```{r}
+(1 - lean_mass/WEIGHT)
+```
 
