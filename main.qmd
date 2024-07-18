@@ -125,7 +125,7 @@ my_weight
 ```
 
 ```{r}
-seq(135, 130,by= -.75)
+seq(135, 130, by = -.75)
 ```
 
 ```{r}
@@ -134,6 +134,63 @@ WEIGHT
 ```
 
 ```{r}
-(1 - lean_mass/WEIGHT)
+BF = (1 - lean_mass/WEIGHT)
+BF
+```
+
+```{r}
+length(DATE)
+length(BF)
+length(WEIGHT)
+```
+
+```{r}
+new_bmr = ComputeBMR(weight = 136, height = 65, age = 32, gender = "male")
+```
+
+```{r}
+new_bmr + new_bmr*my_activity_level
+```
+
+```{r}
+for (i in 1:5) {
+    print(i)
+}
+```
+
+```{r}
+DATE[1]
+```
+
+```{r}
+c(c(1,2),4)
+```
+
+
+
+```{r}
+
+MAINTENANCE = c()
+for (i in 1:length(DATE)) {
+  bmr = ComputeBMR(weight = WEIGHT[i], height = 65, age = 32, gender = "male")
+  maintenance_cals = bmr + bmr*my_activity_level
+  
+  MAINTENANCE = c(MAINTENANCE, maintenance_cals)
+  
+  print(maintenance_cals)
+
+}
+
+MAINTENANCE
+```
+
+
+```{r}
+data.frame(DATE, BF,WEIGHT, MAINTENANCE)
+```
+
+
+```{r}
+as.Date.numeric(c(19723.00,19724.00),origin = "1970-01-01")
 ```
 

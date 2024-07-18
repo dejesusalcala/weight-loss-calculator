@@ -139,10 +139,11 @@ ui <- fluidPage(
     
     h3("Data Table"),
     
+    tableOutput(outputId = "dataTable"),
+    
     hr(),
     
     h3("Important Information")
-
     
 )
 
@@ -171,7 +172,22 @@ server <- function(input, output) {
   
   bodyweight_goal = reactive({(lean_mass()/(1 - (bf_percentage_goal()/100)))})
   
+  weeks_to_reach_goal = reactive({(my_weight() - bodyweight_goal())/(weight_loss_rate())})
+  
+  starting_date = reactive({input$StartingDate})
+  
 
+  # Create data table
+  
+  number_of_weeks = reactive({ceiling(weeks_to_reach_goal())})
+  
+  DATE = reactive({seq(starting_date(), starting_date() + number_of_weeks()*7, by = "week")})
+  
+  WEIGHT = reactive({seq(my_weight(), bodyweight_goal() -weight_loss_rate(),by = -weight_loss_rate())})
+  
+  BF = reactive({(1 - lean_mass()/WEIGHT())})
+  
+  
     output$maintenanceCalories = renderText({
       
       round(maintenance_calories())
@@ -201,36 +217,21 @@ server <- function(input, output) {
     })
     
     output$dateToReachGoal = renderPrint({
-      
-      starting_date = reactive({input$StartingDate})
-      
-      ###
-      
-      #my_weight = 135
-      #current_bf_percentage = .15
-      #goal_bf_percentage = .11
-      #lean_mass = my_weight - my_weight*current_bf_percentage
 
-      #bodyweight_goal = (lean_mass/(1 - goal_bf_percentage))
-      #bodyweight_goal
-      
-      
-      #my_weight - bodyweight_goal
-      
-      weeks_to_reach_goal = (my_weight() - bodyweight_goal())/(weight_loss_rate())
-
-
-      #todays_date = as.Date("2024-6-27")
-      #todays_date
-      
-      goal_date = starting_date() + weeks_to_reach_goal*7
-      ###
+      goal_date = starting_date() + weeks_to_reach_goal()*7
       
       goal_date
       
-      
-      
     })
+    
+    
+    output$dataTable = renderTable({
+      
+      DataTable = data.frame(as.Date(DATE(),origin = "1970-01-01"), WEIGHT(), round(BF()*100, digits = 1))
+      
+      DataTable
+      
+      })
 }
 
 # Run the application 
