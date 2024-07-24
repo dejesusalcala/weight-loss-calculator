@@ -117,17 +117,25 @@ ui <- fluidPage(
     
     hr(),
     
-    h4("Maintenance Calories:"),
+    h4("Current Maintenance Calories:"),
     
     textOutput(outputId = "maintenanceCalories"),
     
-    h4("Calories to Conusume for Weight Loss:"),
+    h4("Current Caloric Deficit:"),
     
     textOutput(outputId = "targetCalories"),
+    
+    h4("Current Weight"),
+    
+    textOutput(outputId = "currentWeight"),
     
     h4("Bodyweight Goal:"),
     
     textOutput(outputId = "bodyweightGoal"),
+    
+    h4("Total Weight to Lose:"),
+    
+    textOutput(outputId = "weightToLose"),
     
     h4("Weeks to reach goal:"),
     
@@ -153,11 +161,20 @@ server <- function(input, output) {
   
   activity = reactive({as.numeric(input$SelectActivityLevel)})
   
+  age = reactive({as.numeric(input$SelectAge)})
+  
+  height_feet = reactive({as.numeric(input$SelectHeightFeet)})
+  
+  height_inches = reactive({as.numeric(input$SelectHeightInches)})
+  
+  gender = reactive({input$SelectGender})
+  
   bmr = reactive({ComputeBMR(weight = input$SelectWeight,
-                             height_feet = as.numeric(input$SelectHeightFeet),
-                             height_inches = as.numeric(input$SelectHeightInches), 
-                             age = as.numeric(input$SelectAge),
-                             gender = input$SelectGender)})
+                             height_feet = height_feet(),
+                             height_inches = height_inches(), 
+                             age = age(),
+                             gender = gender())
+    })
   
   
   maintenance_calories = reactive({bmr() + bmr()*activity()})
@@ -176,19 +193,18 @@ server <- function(input, output) {
   
   starting_date = reactive({input$StartingDate})
   
-
   # Create data table
   
   number_of_weeks = reactive({ceiling(weeks_to_reach_goal())})
+  
   
   DATE = reactive({seq(starting_date(), starting_date() + number_of_weeks()*7, by = "week")})
   
   WEIGHT = reactive({seq(my_weight(), bodyweight_goal() -weight_loss_rate(),by = -weight_loss_rate())})
   
   BF = reactive({(1 - lean_mass()/WEIGHT())})
-  
-  
-    output$maintenanceCalories = renderText({
+   
+   output$maintenanceCalories = renderText({
       
       round(maintenance_calories())
     })
@@ -201,11 +217,19 @@ server <- function(input, output) {
       round(target_calories)
     })
     
+    output$currentWeight = renderText({
+      
+      my_weight()
+    })
+    
     output$bodyweightGoal = renderText({
       
-      
-      
       round(bodyweight_goal(),1)
+    })
+    
+    output$weightToLose = renderText({
+      
+      round(my_weight() - bodyweight_goal(), digits = 1)
     })
     
     output$timeToReachGoal = renderText({
@@ -227,7 +251,31 @@ server <- function(input, output) {
     
     output$dataTable = renderTable({
       
-      DataTable = data.frame(as.Date(DATE(),origin = "1970-01-01"), WEIGHT(), round(BF()*100, digits = 1))
+      height = height_feet() + height_inches()/12
+      
+      height_cm = height*30.48
+      weight_kg = WEIGHT()/2.205
+      
+      if(input$SelectGender == 1)
+      {
+        table_bmr = 10*weight_kg + 6.25*height_cm - 5*age() + 5
+        
+      }else{
+        table_bmr = 10*weight_kg + 6.25*height_cm - 5*age() - 161
+        
+      }
+      
+      table_maintenance_calories = table_bmr + table_bmr*activity()
+      
+      DataTable = data.frame(as.character(DATE(), origin = "1970-01-01"), 
+                             as.character(WEIGHT()),
+                             as.character(round(BF()*100, digits = 1)),
+                             as.character(round(table_maintenance_calories, digits = 0)))
+      
+      colnames(DataTable) = c("Date",
+                              "Weight",
+                              "BF %",
+                              "Maintenance Calories")
       
       DataTable
       

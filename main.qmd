@@ -23,7 +23,6 @@ ComputeBMR = function(weight = 140, height = 65, age = 30, gender = "male") {
   # Convert from imperial to metric
   
   weight = weight*0.45359237
-  height = height*2.54
     
   if (gender == "male") {
     bmr = 10*weight + 6.25*height - 5*age + 5
