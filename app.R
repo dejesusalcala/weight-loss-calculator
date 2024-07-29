@@ -151,7 +151,12 @@ ui <- fluidPage(
     
     hr(),
     
-    h3("Important Information")
+    h3("Important Information"),
+    
+    textOutput(outputId = "Paragraph1"),
+    
+    hr()
+    
     
 )
 
@@ -219,24 +224,27 @@ server <- function(input, output) {
     
     output$currentWeight = renderText({
       
-      my_weight()
+      paste0(my_weight()," lbs")
+      
     })
     
     output$bodyweightGoal = renderText({
       
-      round(bodyweight_goal(),1)
+      paste0(round(bodyweight_goal(),1)," lbs")
+      
     })
     
     output$weightToLose = renderText({
       
-      round(my_weight() - bodyweight_goal(), digits = 1)
-    })
+      paste0(round(my_weight() - bodyweight_goal(), digits = 1), " lbs")
+    
+      })
     
     output$timeToReachGoal = renderText({
       
       weeks_to_reach_goal = (my_weight() - bodyweight_goal())/(weight_loss_rate())
       
-      round(weeks_to_reach_goal,1)
+      paste0(round(weeks_to_reach_goal,1), " weeks")
       
     })
     
@@ -273,13 +281,23 @@ server <- function(input, output) {
                              as.character(round(table_maintenance_calories, digits = 0)))
       
       colnames(DataTable) = c("Date",
-                              "Weight",
-                              "BF %",
+                              "Weight (lbs)",
+                              "Bodyfat (%)",
                               "Maintenance Calories")
       
       DataTable
       
       })
+    
+    output$Paragraph1 = renderText({
+      
+      text1 = "
+      Maintenance calories are computed using the Mifflin-St Jeor equation. Therefore the calories given
+      are dependent age, weight, height and activity level. In this calculator we do have bodyfat percentage
+      as an addtional input, but this is used for the purpose of estimating a desired bodyweight goal along 
+      with a timeline of when that bodyweight goal can be reached.
+      "
+    })
 }
 
 # Run the application 
