@@ -293,9 +293,16 @@ server <- function(input, output) {
       
       text1 = "
       Maintenance calories are computed using the Mifflin-St Jeor equation. Therefore the calories given
-      are dependent age, weight, height and activity level. In this calculator we do have bodyfat percentage
+      are dependent on age, weight, height and activity level. In this calculator we do have bodyfat percentage
       as an addtional input, but this is used for the purpose of estimating a desired bodyweight goal along 
       with a timeline of when that bodyweight goal can be reached.
+      
+      
+      
+      When using this calculator it's important to note that it's very difficult to know one's true bodyfat
+      percentage. However, even though we may not know our true bodyfat percentage we can approximate within
+      1 to 3 percentage points and this can still be quite helpful when using this calculator to provide a
+      timeframe for weight loss.
       "
     })
 }
